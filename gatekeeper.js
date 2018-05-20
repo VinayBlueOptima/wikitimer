@@ -19,7 +19,7 @@ function getURLDomain(url) {
 
 // Check if the url is of wikipedia.org domain.
 function isWikipediaDomain(url) {
-    retunr getURLDomain(url).endsWith("wikipedia.org");
+    return getURLDomain(url).endsWith("wikipedia.org");
 };
 
 // Returns a string containing full year, month and day. Such strings can be used as keys
