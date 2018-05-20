@@ -1,3 +1,6 @@
+/**
+ * Extract the domain part of a url.
+ */
 function getURLDomain(url) {
     if (url === undefined)
         return false;
@@ -14,16 +17,21 @@ function getURLDomain(url) {
     return domain;
 };
 
+// Check if the url is of wikipedia.org domain.
 function isWikipediaDomain(url) {
     retunr getURLDomain(url).endsWith("wikipedia.org");
 };
 
+// Returns a string containing full year, month and day. Such strings can be used as keys
+// for storing daywise browsing data in local storage.
 function getUTCDateKey() {
     var now = new Date();
     return now.getUTCFullYear() + ":" + now.getUTCMonth() + ":" +
         now.getUTCDate();
 }
 
+// Return a string describing the contents(key/values) of the passed object. Useful
+// for debugging purposes.
 function getPropString(obj) {
     if (obj === undefined) {
         return "undefined";
@@ -38,14 +46,6 @@ function getPropString(obj) {
     }
 
     return ret;
-}
-
-function getAllUrls(tabs) {
-    var urls = []; 
-    for (var i = 0;i < tabs.length; i++) {
-        urls.push(tabs[i].url);
-    }
-    return urls;
 }
 
 function arrayElemsToString(arr, delim) {
@@ -123,11 +123,14 @@ function initialize(storedData) {
             browsingData.browseStart = new Date().getTime();
         }
 
-        if (browsingData.timeSpentMs >= DAILY_TIME_LIMIT_MS) {
-            if (f(newurl)) {
+        if (f(newurl)) {
+            if (browsingData.timeSpentMs >= DAILY_TIME_LIMIT_MS) {
                 var redirectUrl = "chrome://newtab";
                 chrome.tabs.update(newTab.id, {url:redirectUrl});
                 alert("quota over, redirecting to " + redirectUrl);
+            } else {
+                // Create an alarm for the remaining time.
+                var timeRemainingMs = DAILY_TIME_LIMIT_MS - browsingData.timeSpentMs;
             }
         }
 
