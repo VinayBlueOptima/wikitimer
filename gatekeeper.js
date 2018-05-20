@@ -1,4 +1,4 @@
-function isWikipediaDomain(url) {
+function getURLDomain(url) {
     if (url === undefined)
         return false;
 
@@ -11,7 +11,11 @@ function isWikipediaDomain(url) {
     if (url.indexOf("/") >= 0) {
         domain = url.substring(0, url.indexOf("/"));
     }
-    return domain.endsWith("wikipedia.org");
+    return domain;
+};
+
+function isWikipediaDomain(url) {
+    retunr getURLDomain(url).endsWith("wikipedia.org");
 };
 
 function getUTCDateKey() {
