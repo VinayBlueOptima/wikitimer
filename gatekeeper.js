@@ -87,6 +87,7 @@ function addTabEventListeners(processTabEvent) {
 };
 
 function initialize(storedData) {
+    var DAILY_TIME_LIMIT_MS = 300000;
     var browsingData = storedData.browsingData || {
         currentUrl: undefined,
         browseStart: undefined,
@@ -122,7 +123,7 @@ function initialize(storedData) {
             browsingData.browseStart = new Date().getTime();
         }
 
-        if (browsingData.timeSpentMs >= 60000) {
+        if (browsingData.timeSpentMs >= DAILY_TIME_LIMIT_MS) {
             if (f(newurl)) {
                 var redirectUrl = "chrome://newtab";
                 chrome.tabs.update(newTab.id, {url:redirectUrl});
