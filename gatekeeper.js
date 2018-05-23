@@ -1,4 +1,4 @@
-/**
+/** 
  * Extract the host part of a url.
  */
 function getURLHost(url) {
@@ -172,6 +172,8 @@ function initialize(storedData) {
                     when: new Date().getTime() + timeRemainingMs
                 });
             }
+        } else {
+            browsingData.browseStart = undefined;
         }
 
         // Sync browsing data to local storage.
@@ -180,6 +182,19 @@ function initialize(storedData) {
 
     // Listen for tab events like create/update/remove and update user browsing info.
     addTabEventListeners(processTabEvent);
+
+    // Consider the cases of window going out and coming into focus.
+    chrome.windows.onFocusChanged.addListener(function(window) {
+        if (window == chrome.windows.WINDOW_ID_NONE) {
+            processTabEvent();
+        } else {
+            chrome.tabs.query({active:true, currentWindow:true}, function(tabs) {
+                if (tabs[0] !== undefined) {
+                    processTabEvent(tabs[0]);
+                }
+            });
+        }
+    });
 
     // Set a recurring alarm for midnight handling and register a handler for it.
     var nextMidNightTime = getNextMidnightTime();
@@ -194,7 +209,6 @@ function initialize(storedData) {
             browsingData.timeSpentMs = 0;
             browsingData.currentUrl = undefined;
             browsingData.browseStart = undefined;
-
             // Sync browsing data to local storage.
             storeBrowsingData();
         } else if (alarm.name === "closer")  {
