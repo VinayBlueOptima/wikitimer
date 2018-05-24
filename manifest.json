@@ -8,7 +8,7 @@
                     "alarms"],
     "background": {
         "persistent": true,
-        "scripts": ["gatekeeper.js"]
+        "page": "bg.html"
     },
 
     "browser_action": {
